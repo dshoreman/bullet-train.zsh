@@ -589,12 +589,11 @@ prompt_nvm() {
   local gitroot="$(git rev-parse --show-toplevel 2>/dev/null)"
   local nvm_prompt
 
-  if [[ "${gitroot}" != "" ]]; then
-    local search="-name 'package.json' -o -name 'node_modules'"
-    out="$( find "${gitroot}" -maxdepth 1 ${search} > /dev/null 2>&1)")
+  [[ "${gitroot}" == "" ]] && gitroot="."
+  out="$( find "${gitroot}" -maxdepth 1 -name 'package.json' -o -name 'node_modules')"
 
-    [[ "${out}" != "" ]] && return
-  fi
+  [[ "${out}" == "" ]] && \
+    return
 
   if type nvm >/dev/null 2>&1; then
     nvm_prompt=$(nvm current 2>/dev/null)
