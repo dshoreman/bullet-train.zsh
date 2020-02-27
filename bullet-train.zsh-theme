@@ -527,6 +527,15 @@ prompt_ruby() {
 
 # ELIXIR
 prompt_elixir() {
+  local gitroot="$(git rev-parse --show-toplevel 2>/dev/null)"
+
+  if [[ "${gitroot}" == "" ]]; then
+    out="$( find '.' -maxdepth 1 -name '*.ex' -o -name '*.exs' )"
+  else
+    out="$( find "${gitroot}" -name '*.ex' -o -name '*.exs' )"
+  fi
+  [[ "${out}" == "" ]] && return
+
   if command -v elixir > /dev/null 2>&1; then
     prompt_segment $BULLETTRAIN_ELIXIR_BG $BULLETTRAIN_ELIXIR_FG $BULLETTRAIN_ELIXIR_PREFIX" $(elixir -v | tail -n 1 | awk '{print $2}')"
   fi
